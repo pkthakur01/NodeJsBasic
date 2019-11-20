@@ -50,30 +50,32 @@ app.post('/auth', function(request, response) {
 		response.end();
 	}
 });
-id = 2;
+var id = 4;
 app.post('/reg', function(request, response) {
     id = id+1;
-	var username = request.body.username;
-    var password = request.body.password;
-    var password = request.body.email;
+    var accounts ={
+        "username":request.body.username,
+        "password":request.body.password,
+        "email":request.body.email
+    }
     var sql = "INSERT INTO `accounts` (`id`, `username`, `password`, `email`) VALUES (id, username, password, email)";
         
-		connection.query(' {
-			if (results.length > 0) {
-				request.session.loggedin = true;
-				request.session.username = username;
-				response.redirect('/home');
-			} else {
-				response.send('Incorrect Username and/or Password!');
-			}			
-			response.end();
-		});
-	} else {
-		response.send('Please enter Username and Password!');
-		response.end();
-	}
-});
-
+        connection.query('INSERT INTO accounts SET ?',accounts, function(error,results,fields)
+        {
+        if(error) 
+        {
+            response.send('Cannot insert data into database');
+        }
+        else {
+            request.session.registered = true;
+			request.session.reguser = request.body.username;
+			response.redirect('/wlcm');
+        }			
+        response.end();
+        });
+        response.end();
+        });
+        
 app.get('/home', function(request, response) {
 	if (request.session.loggedin) {
 		response.send('Welcome back, ' + request.session.username + '!');
@@ -83,4 +85,12 @@ app.get('/home', function(request, response) {
 	response.end();
 });
 
+/*app.get('/wlcm', function(request, response) {
+	if (request.session.registred) {
+		response.send('Welcome , ' + request.session.reguser + '!  Your data has been registered');
+	} else {
+		response.send('Please login to view this page!');
+	}
+	response.end();
+});*/
 app.listen(3000);
