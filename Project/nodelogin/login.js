@@ -8,7 +8,7 @@ var connection = mysql.createConnection({
 	host     : 'localhost',
 	user     : 'root',
 	password : '',
-	database : 'nodelogin'
+	database : 'nodetesting'
 });
 
 var app = express();
@@ -35,7 +35,7 @@ app.post('/auth', function(request, response) {
 	var username = request.body.username;
 	var password = request.body.password;
 	if (username && password) {
-		connection.query('SELECT * FROM accounts WHERE username = ? AND password = ?', [username, password], function(error, results, fields) {
+		connection.query('SELECT * FROM testaccount WHERE username = ? AND password = ?', [username, password], function(error, results, fields) {
 			if (results.length > 0) {
 				request.session.loggedin = true;
 				request.session.username = username;
@@ -53,18 +53,19 @@ app.post('/auth', function(request, response) {
 var id = 4;
 app.post('/reg', function(request, response) {
     id = id+1;
-    var accounts ={
+    var testaccount ={
         "username":request.body.username,
         "password":request.body.password,
         "email":request.body.email
     }
-    var sql = "INSERT INTO `accounts` (`id`, `username`, `password`, `email`) VALUES (id, username, password, email)";
+    //var sql = "INSERT INTO `testaccount` (`username`, `password`, `email`) VALUES (username, password, email)";
         
-        connection.query('INSERT INTO accounts SET ?',accounts, function(error,results,fields)
+        connection.query('INSERT INTO testaccount SET ?',testaccount, function(error,results,fields)
         {
-        if(error) 
+        if(error)
         {
-            response.send('Cannot insert data into database');
+			//response.send('Cannot insert data into database');
+			response.redirect('/login');
         }
         else {
             request.session.registered = true;
