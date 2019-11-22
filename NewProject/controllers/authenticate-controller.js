@@ -35,7 +35,7 @@ module.exports.authenticate=function(req,res){
               var row = results[key]; 
            
              //res.send('Welcome back, ' + email+ '!'); 
-                res.send('Welcome Back '+ row.name );
+                res.send('<h1> Welcome Back '+ row.name + '! </h1>');
               });
                 /*res.json({
                     status:true,
