@@ -1,17 +1,18 @@
-var express=require("express");
-var bodyParser=require('body-parser');
+var express=require("express");  // calling express.js module
+var bodyParser=require('body-parser'); //calliing body parser
  
-var connection = require('./config');
-var app = express();
+var connection = require('./config'); //database connection function
+var app = express(); //including express as app
  
-var authenticateController=require('./controllers/authenticate-controller');
-var registerController=require('./controllers/register-controller');
+var authenticateController=require('./controllers/authenticate-controller');//including login page authentication
+var registerController=require('./controllers/register-controller'); // including registration page authentication
  
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
 app.get('/', function (req, res) {  
-   res.sendFile( __dirname + "/" + "login.html" );  
+   res.sendFile( __dirname + "/" + "login.html" );  //first page 
 })  
  
 app.get('/login.html', function (req, res) {  

@@ -1,10 +1,28 @@
+var http = require('http');
 var Cryptr = require('cryptr');
+
 var express=require("express");
 var connection = require('./../config');
+var passwordValidator = require('password-validator');
 // cryptr = new Cryptr('myTotalySecretKey');
  
 module.exports.register=function(req,res){
+  var schema = new passwordValidator();
+  schema
+    .is().min(8)                                    // Minimum length 8
+    .is().max(100)                                  // Maximum length 100
+    .has().uppercase()                              // Must have uppercase letters
+    .has().lowercase()                              // Must have lowercase letters
+    .has().digits()                                 // Must have digits
+    .has().not().spaces()                           // Should not have spaces
+    .is().not().oneOf(['Passw0rd', 'Password123']); // Blacklist these values(later i will add name also)
+
+    if(schema.validate(req.body.password)){
+
+    
     var today = new Date();
+
+  
   var encryptedString = cryptr.encrypt(req.body.password);//encrypting pasword here before inserting into database
     var users={
         "name":req.body.name,
@@ -30,4 +48,9 @@ module.exports.register=function(req,res){
         res.send('<h2> Data Inserted <br>Name : ' +req.body.name+ '<br>Email : ' +req.body.email + '<br>Time : ' +today+'</h2>');
       }
     });
+    }
+    else
+    {
+      res.send('password dosenot match the required format');
+    }
 }
